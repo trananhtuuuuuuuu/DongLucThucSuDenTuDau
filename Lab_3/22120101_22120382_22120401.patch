@@ -1,0 +1,306 @@
+diff --git a/answers-pgtbl.txt b/answers-pgtbl.txt
+new file mode 100644
+index 0000000..77cc5c2
+--- /dev/null
++++ b/answers-pgtbl.txt
+@@ -0,0 +1,82 @@
++Câu hỏi: Những lệnh gọi hệ thống nào khác trong xv6 có thể được tăng tốc bằng cách sử dụng trang chia sẻ này? Hãy giải thích.
++Trả lời: 
++Trang chia sẻ không chỉ giảm thiểu chi phí sao chép bộ nhớ mà còn cải thiện hiệu suất tổng thể của hệ thống bằng cách:
++
++  - Hạn chế việc cấp phát lại bộ nhớ vật lý.
++  - Tăng tốc độ giao tiếp giữa các tiến trình.
++  - Tận dụng tốt hơn tài nguyên hệ thống.
++
++Câu hỏi: Với mỗi trang lá trong đầu ra,
++bạn cần giải thích những gì nó chứa về mặt logic và các bit quyền của nó.
++Bạn có thể tham khảo Hình 3.4 trong sách xv6,
++mặc dù lưu ý rằng hình ảnh này có thể có một số sự khác biệt so với các trang được kiểm tra trong tiến trình init ở đây.
++
++Trả lời:
++- Trang lá đầu tiên:
++  - Địa chỉ vật lý (PA): 0x87f68000.
++  - Quyền (Permissions):
++    + 0x21fda01f → Nhị phân: 00100001111111011010000000011111.
++    + P (Present): 1 → Trang hợp lệ.
++    + R/W (Read/Write): 1 → Có thể ghi.
++    + U/S (User/Supervisor): 1 → Truy cập từ chế độ user.
++    + X (Executable): 1 → Có thể thực thi.
++    + A (Accessed): 1 → Trang đã được truy cập.
++    + D (Dirty): 1 → Trang đã được ghi.
++  - Kết luận: Trang này nằm trong vùng stack, có quyền đọc, ghi, thực thi. Đây có thể là một phần của stack frame.
++
++- Trang lá thứ hai:
++  - Địa chỉ vật lý (PA): 0x87f65000.
++  - Quyền (Permissions):
++    + 0x21fd941f → Nhị phân: 00100001111111011001000000011111.
++    + P (Present): 1 → Trang hợp lệ.
++    + R/W (Read/Write): 1 → Có thể ghi.
++    + U/S (User/Supervisor): 1 → Truy cập từ chế độ user.
++    + X (Executable): 1 → Có thể thực thi.
++    + A (Accessed): 1 → Trang đã được truy cập.
++    + D (Dirty): 1 → Trang đã được ghi.
++  - Kết luận: Trang này cũng thuộc vùng stack, được dùng cho dữ liệu tạm thời trong ngăn xếp (stack).
++- Trang lá thứ ba:
++  - Địa chỉ vật lý (PA): 0x87f64000.
++  - Quyền (Permissions):
++    + 0x21fd9007 → Nhị phân: 00100001111111011001000000000111.
++    + P (Present): 1 → Trang hợp lệ.
++    + R/W (Read/Write): 1 → Có thể ghi.
++    + U/S (User/Supervisor): 1 → Truy cập từ chế độ user.
++    + X (Executable): 0 → Không thể thực thi.
++    + A (Accessed): 0 → Trang chưa được truy cập.
++    + D (Dirty): 0 → Trang chưa được ghi.
++  - Kết luận: Trang này thuộc vùng data, chứa dữ liệu của biến toàn cục hoặc tĩnh, không được thực thi.
++- Trang lá thứ tư:
++  - Địa chỉ vật lý (PA): 0x87f63000.
++  - Quyền (Permissions):
++    + 0x21fd8c17 → Nhị phân: 00100001111111011000110000010111.
++    + P (Present): 1 → Trang hợp lệ.
++    + R/W (Read/Write): 1 → Có thể ghi.
++    + U/S (User/Supervisor): 1 → Truy cập từ chế độ user.
++    + X (Executable): 0 → Không thể thực thi.
++    + A (Accessed): 1 → Trang đã được truy cập.
++    + D (Dirty): 1 → Trang đã được ghi.
++  - Kết luận: Trang này cũng thuộc vùng data, được sử dụng cho dữ liệu, nhưng không có quyền thực thi.
++- Trang lá thứ năm:
++  - Địa chỉ vật lý (PA): 0x87f73000.
++  - Quyền (Permissions):
++    + 0x21fdcc13 → Nhị phân: 00100001111111011100110000010011.
++    + P (Present): 1 → Trang hợp lệ.
++    + R/W (Read/Write): 1 → Có thể ghi.
++    + U/S (User/Supervisor): 1 → Truy cập từ chế độ user.
++    + X (Executable): 0 → Không thể thực thi.
++    + A (Accessed): 1 → Trang đã được truy cập.
++    + D (Dirty): 1 → Trang đã được ghi.
++  - Kết luận: Trang này thuộc heap, dùng để cấp phát bộ nhớ động (như malloc).
++- Trang lá thứ sáu:
++  - Địa chỉ vật lý (PA): 0x87f74000.
++  - Quyền (Permissions):
++    + 0x21fdd007 → Nhị phân: 00100001111111011101000000000111.
++    + P (Present): 1 → Trang hợp lệ.
++    + R/W (Read/Write): 1 → Có thể ghi.
++    + U/S (User/Supervisor): 1 → Truy cập từ chế độ user.
++    + X (Executable): 0 → Không thể thực thi.
++    + A (Accessed): 0 → Trang chưa được truy cập.
++    + D (Dirty): 0 → Trang chưa được ghi.
++  - Kết luận: Trang này cũng thuộc heap, dùng để cấp phát bộ nhớ động.
++
+diff --git a/kernel/defs.h b/kernel/defs.h
+index a3c962b..bdbd654 100644
+--- a/kernel/defs.h
++++ b/kernel/defs.h
+@@ -173,6 +173,7 @@ uint64          walkaddr(pagetable_t, uint64);
+ int             copyout(pagetable_t, uint64, char *, uint64);
+ int             copyin(pagetable_t, char *, uint64, uint64);
+ int             copyinstr(pagetable_t, char *, uint64, uint64);
++void            vmprint(pagetable_t pagetable);
+ 
+ // plic.c
+ void            plicinit(void);
+diff --git a/kernel/exec.c b/kernel/exec.c
+index e18bbb6..89441fb 100644
+--- a/kernel/exec.c
++++ b/kernel/exec.c
+@@ -128,6 +128,8 @@ exec(char *path, char **argv)
+   p->trapframe->sp = sp; // initial stack pointer
+   proc_freepagetable(oldpagetable, oldsz);
+ 
++  if (p->pid == 1) {vmprint(p->pagetable);}
++
+   return argc; // this ends up in a0, the first argument to main(argc, argv)
+ 
+  bad:
+diff --git a/kernel/proc.c b/kernel/proc.c
+index 58a8a0b..096beb9 100644
+--- a/kernel/proc.c
++++ b/kernel/proc.c
+@@ -132,6 +132,14 @@ found:
+     return 0;
+   }
+ 
++  // Allocate a usyscall page.
++  if((p->usyscall = (struct usyscall *)kalloc()) == 0) {
++    freeproc(p);
++    release(&p->lock);
++    return 0;
++  }
++  (p->usyscall)->pid = p->pid;
++
+   // An empty user page table.
+   p->pagetable = proc_pagetable(p);
+   if(p->pagetable == 0){
+@@ -157,6 +165,8 @@ freeproc(struct proc *p)
+ {
+   if(p->trapframe)
+     kfree((void*)p->trapframe);
++  if(p->usyscall)
++    kfree((void*)p->usyscall);
+   p->trapframe = 0;
+   if(p->pagetable)
+     proc_freepagetable(p->pagetable, p->sz);
+@@ -202,6 +212,14 @@ proc_pagetable(struct proc *p)
+     return 0;
+   }
+ 
++  if(mappages(pagetable, USYSCALL, PGSIZE,
++              (uint64)p->usyscall, PTE_R | PTE_U) < 0) {
++    uvmunmap(pagetable, TRAMPOLINE, 1, 0);
++    uvmunmap(pagetable, TRAPFRAME, 1, 0);
++    uvmfree(pagetable, 0);
++    return 0;
++  }
++
+   return pagetable;
+ }
+ 
+@@ -212,6 +230,7 @@ proc_freepagetable(pagetable_t pagetable, uint64 sz)
+ {
+   uvmunmap(pagetable, TRAMPOLINE, 1, 0);
+   uvmunmap(pagetable, TRAPFRAME, 1, 0);
++  uvmunmap(pagetable, USYSCALL,1 , 0);
+   uvmfree(pagetable, sz);
+ }
+ 
+diff --git a/kernel/proc.h b/kernel/proc.h
+index d021857..acd4f0a 100644
+--- a/kernel/proc.h
++++ b/kernel/proc.h
+@@ -100,6 +100,7 @@ struct proc {
+   uint64 sz;                   // Size of process memory (bytes)
+   pagetable_t pagetable;       // User page table
+   struct trapframe *trapframe; // data page for trampoline.S
++  struct usyscall *usyscall;
+   struct context context;      // swtch() here to run process
+   struct file *ofile[NOFILE];  // Open files
+   struct inode *cwd;           // Current directory
+diff --git a/kernel/riscv.h b/kernel/riscv.h
+index 20a01db..1f6147d 100644
+--- a/kernel/riscv.h
++++ b/kernel/riscv.h
+@@ -361,3 +361,4 @@ typedef uint64 *pagetable_t; // 512 PTEs
+ // Sv39, to avoid having to sign-extend virtual addresses
+ // that have the high bit set.
+ #define MAXVA (1L << (9 + 9 + 9 + 12 - 1))
++#define PTE_A (1L << 6)
+\ No newline at end of file
+diff --git a/kernel/sysproc.c b/kernel/sysproc.c
+index 88644b2..6b302f2 100644
+--- a/kernel/sysproc.c
++++ b/kernel/sysproc.c
+@@ -70,14 +70,6 @@ sys_sleep(void)
+ }
+ 
+ 
+-#ifdef LAB_PGTBL
+-int
+-sys_pgaccess(void)
+-{
+-  // lab pgtbl: your code here.
+-  return 0;
+-}
+-#endif
+ 
+ uint64
+ sys_kill(void)
+@@ -100,3 +92,46 @@ sys_uptime(void)
+   release(&tickslock);
+   return xticks;
+ }
++
++int
++sys_pgaccess(void)
++{
++	uint64 address;
++	int page_count;
++	uint64 result_addr;
++	struct proc *current_proc = myproc();
++	uint64 result_mask;
++
++	// Lấy các tham số từ người dùng
++	argaddr(0, &address);
++	argint(1, &page_count);
++	argaddr(2, &result_addr);
++
++	// Kiểm tra số lượng trang
++	if (page_count > 64)
++		return -1;
++
++	// Khởi tạo kết quả
++	result_mask = 0;
++
++	// Duyệt qua từng trang bộ nhớ
++	for (uint64 i = 0; i < page_count; ++i)
++	{
++		pte_t *pte;
++		pte = walk(current_proc->pagetable, address + i * PGSIZE, 0);
++    
++		// Kiểm tra bit PTE_A (Accessed)
++		if (pte != 0 && ((*pte) & PTE_A))
++		{
++			// Cập nhật kết quả và xóa bit PTE_A
++			result_mask = result_mask | (1L << i);
++			*pte = (*pte) & ~PTE_A;
++		}
++	}
++
++	// Sao chép kết quả ra bộ nhớ người dùng
++	if (copyout(current_proc->pagetable, result_addr, (char *)&result_mask, sizeof(result_mask)) < 0)
++		return -1;
++
++	return 0;
++}
+diff --git a/kernel/vm.c b/kernel/vm.c
+index 5c31e87..74c3da7 100644
+--- a/kernel/vm.c
++++ b/kernel/vm.c
+@@ -449,3 +449,41 @@ copyinstr(pagetable_t pagetable, char *dst, uint64 srcva, uint64 max)
+     return -1;
+   }
+ }
++
++void
++print_pagetable(pagetable_t pagetable, int level)
++{
++
++    if (level == 2)
++        printf("page table %p\n", pagetable);
++
++    for (int i = 0; i < 512; i++) {
++
++        pte_t pte = pagetable[i];
++        if (pte & PTE_V) {
++
++            // Print PTE at the current level
++            for (int j = 2; j >= level; j--)
++                printf(" ..");
++            printf("%d: pte %p pa %p\n", i, pte, PTE2PA(pte));
++
++            // If not a leaf page, continue traversing
++            if (level > 0) {
++
++                uint64 child = PTE2PA(pte);
++                print_pagetable((pagetable_t)child, level - 1);
++
++            }
++
++        }
++        
++    }
++}
++
++
++void
++vmprint(pagetable_t pagetable){
++    print_pagetable(pagetable, 2); // Start at the highest level
++}
++
++
+diff --git a/time.txt b/time.txt
+new file mode 100644
+index 0000000..368f89c
+--- /dev/null
++++ b/time.txt
+@@ -0,0 +1 @@
++28
+\ No newline at end of file
